@@ -23,7 +23,8 @@
     "sandboxed",
     "transpiled",
     "typedoc",
-    "untracked"
+    "untracked",
+    "LLVAR"
   ],
   "flagWords": [],
   "ignorePaths": [

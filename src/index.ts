@@ -1,1 +1,1 @@
-export * from './lib/packer';
+export * from './lib/message';

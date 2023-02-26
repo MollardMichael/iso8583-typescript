@@ -21,12 +21,12 @@
     "pretty": true,
     "lib": ["es2017"],
     "types": ["node"],
-    "typeRoots": ["node_modules/@types", "src/types"]
+    "typeRoots": ["node_modules/@types"]
   },
   "include": ["src/**/*.ts", "*.ts"],
   "exclude": ["node_modules/**"],
   "compileOnSave": false,
   "typedocOptions": {
-    "entryPoints": ["./src", "./src/lib/pipeable.ts"]
+    "entryPoints": ["./src"]
   }
 }
