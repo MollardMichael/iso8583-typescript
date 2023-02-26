@@ -1,7 +1,7 @@
 # trie-ts
 
 ![license](https://img.shields.io/github/license/MollardMichael/iso8583-typescript.svg)
-[![codecov](https://codecov.io/gh/MollardMichael/iso8583-typescript/branch/master/graph/badge.svg?token=OI6LKGG1R7)](https://codecov.io/gh/MollardMichael/iso8583-typescript)
+[![codecov](https://codecov.io/gh/MollardMichael/iso8583-typescript/branch/master/graph/badge.svg?token=TocNp9fvi2)](https://codecov.io/gh/MollardMichael/iso8583-typescript)
 ![Build Status](https://github.com/MollardMichael/iso8583-typescript/actions/workflows/push.yml/badge.svg)
 
 This repository is yet another implementation of iso8583 parser in typescript
