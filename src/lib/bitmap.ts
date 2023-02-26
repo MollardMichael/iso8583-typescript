@@ -12,13 +12,13 @@ export const SimpleBitmap: Bitmap = Array(8).fill('00') as FixedArray<
   8
 >;
 
-export type FlipBitmap = (bitmap: Bitmap, position: number) => Bitmap;
-export type InitBitmap = (buffer: Buffer) => { bitmap: Bitmap; rest: Buffer };
+export type ReadBitmap = (buffer: Buffer) => { bitmap: Bitmap; rest: Buffer };
+export type WriteBitmap = (fields: number[]) => Buffer;
 export type IsExtended = (bitmap: Bitmap) => boolean;
 export type PrintBitmap = (bitmap: Bitmap) => string;
 export type IterateBitmap = (bitmap: Bitmap) => Generator<number, void>;
 
-export const isExtended: IsExtended = (bitmap) => {
+const isExtended: IsExtended = (bitmap) => {
   return bitmap.length === 16;
 };
 
@@ -26,11 +26,15 @@ export function isBitOn(byte: HexByte, index: Digit7) {
   return Boolean(Number.parseInt(byte, 16) & (1 << (7 - index)));
 }
 
-export const readBitmap: InitBitmap = (buffer) => {
-  if (!buffer) {
-    return { bitmap: Array<string>(64).fill('0') as Bitmap, rest: buffer };
+function setBit(buffer: Buffer, i: number, bit: number, value: number) {
+  if (value == 0) {
+    buffer[i] &= ~(1 << bit);
+  } else {
+    buffer[i] |= 1 << bit;
   }
+}
 
+export const readBitmap: ReadBitmap = (buffer) => {
   if (isBitOn(buffer.toString('hex', 0, 1) as HexByte, 0)) {
     return {
       bitmap: buffer.toString('hex', 0, 16).match(/..?/g) as Bitmap,
@@ -42,6 +46,22 @@ export const readBitmap: InitBitmap = (buffer) => {
     bitmap: buffer.toString('hex', 0, 8).match(/..?/g) as Bitmap,
     rest: buffer.subarray(8),
   };
+};
+
+export const writeBitmap = (fields: number[]) => {
+  const sorted = fields.sort((a, b) => a - b);
+  const isExtended = (sorted.at(-1) || 0) > 64;
+  const bitmap: Buffer = isExtended ? Buffer.alloc(16) : Buffer.alloc(8);
+
+  if (isExtended) {
+    setBit(bitmap, 0, 7, 1);
+  }
+
+  for (const field of sorted) {
+    setBit(bitmap, Math.floor((field - 1) / 8), 7 - ((field - 1) % 8), 1);
+  }
+
+  return bitmap;
 };
 
 export const iterate: IterateBitmap = function* (bitmap) {

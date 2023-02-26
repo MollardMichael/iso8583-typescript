@@ -1,6 +1,12 @@
 import { Digit7, HexByte } from '../types/mti';
 import { expect, test } from 'vitest';
-import { isBitOn, readBitmap, printBitmap } from './bitmap';
+import {
+  isBitOn,
+  readBitmap,
+  printBitmap,
+  iterate,
+  writeBitmap,
+} from './bitmap';
 
 test('we are able to parse buffer byte by byte and check the bits', () => {
   const buffer = Buffer.from('7010001102C04804', 'hex');
@@ -69,4 +75,12 @@ test('we can print it for easy debugging', () => {
   expect(printBitmap(bitmap)).toEqual(`Bitmap ->
 \tType -> Simple
 \tFields Set -> 2, 3, 4, 12, 28, 32, 39, 41, 42, 50, 53, 62`);
+});
+
+test('we can read and write the same bitmap', () => {
+  const buffer = Buffer.from('7010001102C04804', 'hex');
+  const { bitmap } = readBitmap(buffer);
+  const fields = Array.from(iterate(bitmap));
+  const result = writeBitmap(fields);
+  expect(result).toEqual(buffer);
 });

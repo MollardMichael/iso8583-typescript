@@ -1,11 +1,12 @@
 import { ByteToNumberCodec, Codec, EBCDICCodec, HexCodec } from './codec';
 
 export type FieldOption = {
-  length: number | ReturnType<FieldFactory<number>>;
+  length: number | Field<number>;
 };
 
 export type Field<T = string> = {
   parse: (iso: Buffer) => { value: T; rest: Buffer };
+  prepare: (value: T) => Buffer;
 };
 
 export type FieldFactory<T = string> = (options: FieldOption) => Field<T>;
@@ -22,6 +23,18 @@ const Base: <T>(codec: Codec<T>) => FieldFactory<T> = (codec) => (options) => ({
 
     const data = codec.decode(raw.subarray(0, length));
     return { value: data, rest: raw.subarray(length) };
+  },
+  prepare(value) {
+    const result = [];
+    const raw = codec.encode(value);
+
+    if (isField(options.length)) {
+      const length = options.length.prepare(raw.length);
+      result.push(length);
+    }
+
+    result.push(raw);
+    return Buffer.concat(result);
   },
 });
 
