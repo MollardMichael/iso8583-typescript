@@ -1,7 +1,8 @@
 import { EBCDIC, HEX, LLVAR_EBCDIC, LLVAR_HEX } from '../lib/fields';
-import { MessageDefinition } from '../lib/message';
 
-export const customDefinition: MessageDefinition = {
+import { createFieldDefinition } from './../lib/message';
+
+export const CustomIsoDefinition = createFieldDefinition({
   fields: {
     2: {
       name: 'PAN',
@@ -97,4 +98,4 @@ export const customDefinition: MessageDefinition = {
     },
   },
   mtiField: HEX({ length: 2 }),
-};
+});
