@@ -1,4 +1,5 @@
 import type { MTI } from '../types/mti';
+import { ParseFieldDefinition } from '../types/utils';
 
 import {
   Bitmap,
@@ -7,43 +8,51 @@ import {
   readBitmap,
   writeBitmap,
 } from './bitmap';
-import type { Field } from './fields';
+import { Field } from './fields';
 
-export type Message = {
-  definition: MessageDefinition;
+export type FieldDefinition = {
+  [key: string]: {
+    name: string;
+    field: Field<string> | Field<number>;
+  };
+};
+
+export type Message<FD extends FieldDefinition> = {
+  definition: MessageDefinition<FD>;
   mti: MTI;
   bitmap: Bitmap;
-  content: Record<number, string>;
+  content: Partial<ParseFieldDefinition<FD>>;
+  show: () => string;
 };
 
-export type MessageDefinition = {
+export type MessageDefinition<FD extends FieldDefinition> = {
   mtiField: Field<string>;
-  fields: Record<
-    number,
-    {
-      name: string;
-      field: Field;
-    }
-  >;
+  fields: FD;
 };
 
-export type Parse = (definition: MessageDefinition, iso: Buffer) => Message;
-export type Prepare = (
-  definition: MessageDefinition,
-  message: Message
-) => Buffer;
-export type PrintMessage = (message: Message) => string;
+export type Parse = <FD extends FieldDefinition>(
+  definition: MessageDefinition<FD>,
+  iso: Buffer
+) => Message<FD>;
 
-type ExtractMTI = (
-  definition: MessageDefinition,
+export type Prepare = <FD extends FieldDefinition>(
+  definition: MessageDefinition<FD>,
+  message: Message<FD>
+) => Buffer;
+export type PrintMessage = <FD extends FieldDefinition>(
+  message: Omit<Message<FD>, 'show'>
+) => string;
+
+type ExtractMTI = <FD extends FieldDefinition>(
+  definition: MessageDefinition<FD>,
   iso: Buffer
 ) => { rest: Buffer; value: MTI };
 
-type ExtractFields = (
-  message: MessageDefinition,
+type ExtractFields = <FD extends FieldDefinition>(
+  message: MessageDefinition<FD>,
   bitmap: Bitmap,
   iso: Buffer
-) => Message['content'];
+) => ParseFieldDefinition<FD>;
 
 export const printMessage: PrintMessage = (message) => {
   return `MTI -> ${message.mti}\n${printBitmap(
@@ -61,11 +70,16 @@ export const parse: Parse = (definition, iso) => {
   const { bitmap: bitmap, rest: fieldData } = readBitmap(withBitmap);
   const content = extractFields(definition, bitmap, fieldData);
 
-  return {
+  const messageContent = {
     mti,
     bitmap,
-    definition: definition,
+    definition,
     content,
+  };
+
+  return {
+    ...messageContent,
+    show: () => printMessage(messageContent),
   };
 };
 
@@ -76,8 +90,8 @@ export const prepare: Prepare = (definition, message) => {
   const orderedFields = Object.entries(message.content).sort(
     ([a], [b]) => Number(a) - Number(b)
   );
-  const fieldBuffers = orderedFields.map(([field, value]) =>
-    definition.fields[Number(field)].field.prepare(value)
+  const fieldBuffers = orderedFields.map(
+    ([field, value]) => definition.fields[field].field.prepare(value as never) // TODO FIX
   );
   return Buffer.concat(result.concat(fieldBuffers));
 };
@@ -91,9 +105,13 @@ const extractMTI: ExtractMTI = (definition, iso) => {
   };
 };
 
-const extractFields: ExtractFields = (messageDefinition, bitmap, iso) => {
+const extractFields: ExtractFields = <FD extends FieldDefinition>(
+  messageDefinition: MessageDefinition<FD>,
+  bitmap: Bitmap,
+  iso: Buffer
+) => {
   let rest = iso;
-  const result: Record<number, string> = {};
+  const result: { [x: string]: string | number } = {};
   for (const field of iterate(bitmap)) {
     const definition = messageDefinition.fields[field];
     if (!definition) {
@@ -104,8 +122,18 @@ const extractFields: ExtractFields = (messageDefinition, bitmap, iso) => {
 
     const parsed = definition.field.parse(rest);
     rest = parsed.rest;
-    result[field] = parsed.value;
+    result[field.toString()] = parsed.value;
   }
 
-  return result;
+  return result as ParseFieldDefinition<FD>;
+};
+
+export const createFieldDefinition = <FD extends FieldDefinition>(
+  messageDef: MessageDefinition<FD>
+) => {
+  return {
+    ...messageDef,
+    parse: (iso: Buffer) => parse(messageDef, iso),
+    prepare: (message: Message<FD>) => prepare(messageDef, message),
+  };
 };

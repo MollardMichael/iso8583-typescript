@@ -4,7 +4,7 @@ export type FieldOption = {
   length: number | Field<number>;
 };
 
-export type Field<T = string> = {
+export type Field<T> = {
   parse: (iso: Buffer) => { value: T; rest: Buffer };
   prepare: (value: T) => Buffer;
 };
