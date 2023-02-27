@@ -28,7 +28,7 @@ jobs:
         run: npm run test
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
           verbose: true
