@@ -1,5 +1,5 @@
 import type { FixedArray } from '../types/array';
-import type { Digit7, HexByte } from '../types/mti';
+import type { Digit7, HexByte } from '../types/byte';
 
 export type Bitmap = FixedArray<HexByte, 8> | FixedArray<HexByte, 16>;
 

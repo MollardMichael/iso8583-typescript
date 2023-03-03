@@ -1,4 +1,4 @@
-import { Digit7, HexByte } from '../types/mti';
+import { Digit7, HexByte } from '../types/byte';
 import { expect, test } from 'vitest';
 import {
   isBitOn,

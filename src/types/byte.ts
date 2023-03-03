@@ -8,5 +8,3 @@ type Digit1 = 0 | 1;
 type HexDigit = Digit9 | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
 
 export type HexByte = `${HexDigit}${HexDigit}`;
-
-export type MTI = `${Digit2}${Digit8}${Digit7}${Digit4}`;
