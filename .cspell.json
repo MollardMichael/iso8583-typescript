@@ -16,6 +16,9 @@
     "exponentiate",
     "globby",
     "libauth",
+    "LLLLVAR",
+    "LLLVAR",
+    "LLVAR",
     "micham",
     "mkdir",
     "pipeable",
@@ -23,8 +26,7 @@
     "sandboxed",
     "transpiled",
     "typedoc",
-    "untracked",
-    "LLVAR"
+    "untracked"
   ],
   "flagWords": [],
   "ignorePaths": [

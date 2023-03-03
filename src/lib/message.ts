@@ -1,4 +1,3 @@
-import type { MTI } from '../types/mti';
 import { ParseFieldDefinition } from '../types/utils';
 
 import {
@@ -19,14 +18,14 @@ export type FieldDefinition = {
 
 export type Message<FD extends FieldDefinition> = {
   definition: MessageDefinition<FD>;
-  mti: MTI;
+  mti: number;
   bitmap: Bitmap;
   content: Partial<ParseFieldDefinition<FD>>;
   show: () => string;
 };
 
 export type MessageDefinition<FD extends FieldDefinition> = {
-  mtiField: Field<string>;
+  mtiField: Field<number>;
   fields: FD;
 };
 
@@ -39,14 +38,11 @@ export type Prepare = <FD extends FieldDefinition>(
   definition: MessageDefinition<FD>,
   message: Message<FD>
 ) => Buffer;
-export type PrintMessage = <FD extends FieldDefinition>(
-  message: Omit<Message<FD>, 'show'>
-) => string;
 
 type ExtractMTI = <FD extends FieldDefinition>(
   definition: MessageDefinition<FD>,
   iso: Buffer
-) => { rest: Buffer; value: MTI };
+) => { rest: Buffer; value: number };
 
 type ExtractFields = <FD extends FieldDefinition>(
   message: MessageDefinition<FD>,
@@ -54,7 +50,9 @@ type ExtractFields = <FD extends FieldDefinition>(
   iso: Buffer
 ) => ParseFieldDefinition<FD>;
 
-export const printMessage: PrintMessage = (message) => {
+export const printMessage = <FD extends FieldDefinition>(
+  message: Omit<Message<FD>, 'show'>
+): string => {
   return `MTI -> ${message.mti}\n${printBitmap(
     message.bitmap
   )}\nFields ->\n\t${Object.entries(message.content)
@@ -100,7 +98,7 @@ const extractMTI: ExtractMTI = (definition, iso) => {
   const result = definition.mtiField.parse(iso);
 
   return {
-    value: result.value as MTI,
+    value: result.value,
     rest: result.rest,
   };
 };
@@ -115,8 +113,9 @@ const extractFields: ExtractFields = <FD extends FieldDefinition>(
   for (const field of iterate(bitmap)) {
     const definition = messageDefinition.fields[field];
     if (!definition) {
-      console.log('field ', field, ', buffer ', rest);
-      console.log('step', result);
+      console.error(printBitmap(bitmap));
+      console.error('field ', field, ', buffer ', rest);
+      console.error('step', result);
       throw new Error('Encountered unknown field in bitmap');
     }
 

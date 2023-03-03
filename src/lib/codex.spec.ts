@@ -1,5 +1,12 @@
 import { test, describe, expect } from 'vitest';
-import { ByteToNumberCodec, EBCDICCodec, HexCodec } from './codec';
+import {
+  ANCodec,
+  AsciiNumber,
+  BinaryCodec,
+  ByteToNumberCodec,
+  EBCDICCodec,
+  HexCodec,
+} from './codec';
 
 describe('Codecs', () => {
   [
@@ -9,6 +16,11 @@ describe('Codecs', () => {
     { codec: ByteToNumberCodec, input: 1 },
     { codec: HexCodec, input: 'af00cc' },
     { codec: HexCodec, input: '0f00cc' },
+    { codec: ANCodec, input: 'Fire Bird' },
+    { codec: ANCodec, input: 'Red Panda 123456' },
+    { codec: BinaryCodec, input: 'Here 456é&é(' },
+    { codec: AsciiNumber, input: NaN },
+    { codec: AsciiNumber, input: 123456 },
   ].map(({ codec, input }: any) => {
     test(
       'should be able to encode and decode to get the initial input using ' +

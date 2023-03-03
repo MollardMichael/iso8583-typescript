@@ -16,6 +16,26 @@ export const HexCodec: Codec = {
   },
 };
 
+export const ANCodec: Codec = {
+  name: 'ANCodec',
+  decode: function (input: Buffer): string {
+    return input.toString('ascii').trim();
+  },
+  encode: function (input: string): Buffer {
+    return Buffer.from(input, 'ascii');
+  },
+};
+
+export const BinaryCodec: Codec<string> = {
+  name: 'ByteToNumberCodec',
+  decode: function (input: Buffer): string {
+    return input.toString('binary');
+  },
+  encode: function (input: string): Buffer {
+    return Buffer.from(input, 'binary');
+  },
+};
+
 export const ByteToNumberCodec: Codec<number> = {
   name: 'ByteToNumberCodec',
   decode: function (input: Buffer): number {
@@ -25,6 +45,16 @@ export const ByteToNumberCodec: Codec<number> = {
     let hex = input.toString(16);
     if (hex.length % 2 === 1) hex = '0' + hex;
     return Buffer.from(hex, 'hex');
+  },
+};
+
+export const AsciiNumber: Codec<number> = {
+  name: 'ByteToNumberCodec',
+  decode: function (input: Buffer): number {
+    return Number.parseInt(input.toString(), 10);
+  },
+  encode: function (input: number): Buffer {
+    return Buffer.from(input.toString());
   },
 };
 
