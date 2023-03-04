@@ -1,13 +1,4 @@
-import {
-  BCD,
-  BN,
-  EBCDIC,
-  HEX,
-  LLLVAR_HEX,
-  LLVAR_EBCDIC,
-  LLVAR_HEX,
-  Packed_HEX,
-} from '../lib/fields';
+import { BCD, BN, EBCDIC, HEX, LLLVAR_HEX, LLVAR_EBCDIC, LLVAR_HEX, Packed_HEX } from '../lib/fields';
 
 import { createFieldDefinition } from './../lib/message';
 
@@ -27,10 +18,7 @@ export const CustomIsoDefinition = createFieldDefinition({
     '22': { name: 'Read Type', field: Packed_HEX({ length: 4 }) }, // TODO: Handle subfields
     '23': { name: 'PAN Sequence Number', field: BCD({ length: 3 }) },
     '25': { name: 'RUF', field: BCD({ length: 2 }) },
-    '32': {
-      name: 'Acquiring ID',
-      field: Packed_HEX({ length: BN({ length: 1 }) }),
-    },
+    '32': { name: 'Acquiring ID', field: Packed_HEX({ length: BN({ length: 1 }) }) },
     '37': { name: 'Retrieval Reference Number', field: EBCDIC({ length: 12 }) },
     '38': { name: 'Authorization ID', field: EBCDIC({ length: 6 }) },
     '39': { name: 'Response Code', field: EBCDIC({ length: 2 }) },
@@ -47,10 +35,7 @@ export const CustomIsoDefinition = createFieldDefinition({
     '54': { name: 'Supplementary amount', field: EBCDIC({ length: 20 }) },
     '55': { name: 'RUF', field: LLVAR_HEX },
     '64': { name: 'MAC', field: HEX({ length: 8 }) },
-    '90': {
-      name: 'Original Transaction Info',
-      field: Packed_HEX({ length: 42 }),
-    }, // TODO: Handle subfields
+    '90': { name: 'Original Transaction Info', field: Packed_HEX({ length: 42 }) }, // TODO: Handle subfields
     '95': { name: 'Amount Update', field: Packed_HEX({ length: 42 }) }, // TODO: Handle subfields
     '128': { name: 'MAC 2', field: Packed_HEX({ length: 8 }) },
   },
