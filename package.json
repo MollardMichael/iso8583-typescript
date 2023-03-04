@@ -8,10 +8,17 @@
   "repository": "https://github.com/MollardMichael/iso8583-typescript",
   "license": "MIT",
   "keywords": [],
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./build/main/*"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./build/main/index.d.ts",
-      "require": "./dist/cjs/index.js",
+      "require": "./build/main/index.js",
       "import": "./build/module/index.js"
     },
     "./examples/*": {
