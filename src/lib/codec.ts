@@ -29,7 +29,8 @@ export const ANCodec: Codec = {
 export const BinaryCodec: Codec<string> = {
   name: 'ByteToNumberCodec',
   decode: function (input: Buffer): string {
-    return input.toString('binary');
+    // eslint-disable-next-line no-control-regex
+    return input.toString('binary').replace(/\x00*$/, '');
   },
   encode: function (input: string): Buffer {
     return Buffer.from(input, 'binary');
