@@ -1,6 +1,5 @@
 import { AN, B, LLLLVAR_B, LLLVAR_AN, LLLVAR_B, LLVAR_AN, LLVAR_B, LLVAR_N, N } from '../lib/fields';
-
-import { createFieldDefinition } from './../lib/message';
+import { createFieldDefinition } from '../lib/message';
 
 /*
   Example implementation of the Berlin Group ISO 8583 Protocol -> https://www.berlin-group.org/_files/ugd/c2914b_389fa9f9863d4fd2b17b6494d62560de.pdf

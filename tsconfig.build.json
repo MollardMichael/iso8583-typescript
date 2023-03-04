@@ -27,6 +27,12 @@
   "exclude": ["node_modules/**", "src/**/*.spec.ts"],
   "compileOnSave": false,
   "typedocOptions": {
-    "entryPoints": ["./src"]
+    "entryPoints": [
+      "./src/index.ts",
+      "./src/lib/fields.ts",
+      "./src/lib/codec.ts",
+      "./src/lib/bitmap.ts",
+      "./src/examples"
+    ]
   }
 }

@@ -1,13 +1,6 @@
 import { ParseFieldDefinition } from '../types/utils';
 
-import {
-  Bitmap,
-  iterate,
-  printBitmap,
-  readBitmap,
-  SimpleBitmap,
-  writeBitmap,
-} from './bitmap';
+import { Bitmap, iterate, printBitmap, readBitmap, SimpleBitmap, writeBitmap } from './bitmap';
 import { Field } from './fields';
 
 export type FieldDefinition = {
@@ -30,37 +23,9 @@ export type MessageDefinition<FD extends FieldDefinition> = {
   fields: FD;
 };
 
-export type Parse = <FD extends FieldDefinition>(
-  definition: MessageDefinition<FD>,
-  iso: Buffer
-) => Message<FD>;
-
-export type Prepare = <FD extends FieldDefinition>(
-  definition: MessageDefinition<FD>,
-  message: Message<FD>
-) => Buffer;
-
-type ExtractMTI = <FD extends FieldDefinition>(
-  definition: MessageDefinition<FD>,
-  iso: Buffer
-) => { rest: Buffer; value: number };
-
-type ExtractFields = <FD extends FieldDefinition>(
-  message: MessageDefinition<FD>,
-  bitmap: Bitmap,
-  iso: Buffer
-) => ParseFieldDefinition<FD>;
-
-export const printMessage = <FD extends FieldDefinition>(
-  message: Omit<Message<FD>, 'show'>
-): string => {
-  return `MTI -> ${message.mti}\n${printBitmap(
-    message.bitmap
-  )}\nFields ->\n\t${Object.entries(message.content)
-    .map(
-      ([field, value]) =>
-        `${message.definition.fields[Number(field)].name}: ${value}`
-    )
+export const printMessage = <FD extends FieldDefinition>(message: Omit<Message<FD>, 'show'>): string => {
+  return `MTI -> ${message.mti}\n${printBitmap(message.bitmap)}\nFields ->\n\t${Object.entries(message.content)
+    .map(([field, value]) => `${message.definition.fields[Number(field)].name}: ${value}`)
     .join('\n\t')}`;
 };
 
@@ -78,7 +43,7 @@ export const createNewMessage = <FD extends FieldDefinition>(
   return { ...messageContent, show: () => printMessage(messageContent) };
 };
 
-export const parse: Parse = (definition, iso) => {
+export const parse = <FD extends FieldDefinition>(definition: MessageDefinition<FD>, iso: Buffer): Message<FD> => {
   const { value: mti, rest: withBitmap } = extractMTI(definition, iso);
   const { bitmap: bitmap, rest: fieldData } = readBitmap(withBitmap);
   const content = extractFields(definition, bitmap, fieldData);
@@ -96,20 +61,21 @@ export const parse: Parse = (definition, iso) => {
   };
 };
 
-export const prepare: Prepare = (definition, message) => {
+export const prepare = <FD extends FieldDefinition>(
+  definition: MessageDefinition<FD>,
+  message: Message<FD>
+): Buffer => {
   const result = [];
   result.push(definition.mtiField.prepare(message.mti));
   result.push(writeBitmap(Object.keys(message.content).map(Number)));
-  const orderedFields = Object.entries(message.content).sort(
-    ([a], [b]) => Number(a) - Number(b)
-  );
+  const orderedFields = Object.entries(message.content).sort(([a], [b]) => Number(a) - Number(b));
   const fieldBuffers = orderedFields.map(
     ([field, value]) => definition.fields[field].field.prepare(value as never) // TODO FIX
   );
   return Buffer.concat(result.concat(fieldBuffers));
 };
 
-const extractMTI: ExtractMTI = (definition, iso) => {
+const extractMTI = <FD extends FieldDefinition>(definition: MessageDefinition<FD>, iso: Buffer) => {
   const result = definition.mtiField.parse(iso);
 
   return {
@@ -118,7 +84,7 @@ const extractMTI: ExtractMTI = (definition, iso) => {
   };
 };
 
-const extractFields: ExtractFields = <FD extends FieldDefinition>(
+const extractFields = <FD extends FieldDefinition>(
   messageDefinition: MessageDefinition<FD>,
   bitmap: Bitmap,
   iso: Buffer
@@ -142,9 +108,7 @@ const extractFields: ExtractFields = <FD extends FieldDefinition>(
   return result as ParseFieldDefinition<FD>;
 };
 
-export const createFieldDefinition = <FD extends FieldDefinition>(
-  messageDef: MessageDefinition<FD>
-) => {
+export const createFieldDefinition = <FD extends FieldDefinition>(messageDef: MessageDefinition<FD>) => {
   return {
     ...messageDef,
     parse: (iso: Buffer) => parse(messageDef, iso),

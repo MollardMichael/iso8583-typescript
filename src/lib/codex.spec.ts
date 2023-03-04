@@ -1,13 +1,5 @@
 import { test, describe, expect } from 'vitest';
-import {
-  ANCodec,
-  AsciiNumber,
-  BCDNumberCodec,
-  BinaryCodec,
-  ByteToNumberCodec,
-  EBCDICCodec,
-  HexCodec,
-} from './codec';
+import { ANCodec, AsciiNumber, BCDNumberCodec, BinaryCodec, ByteToNumberCodec, EBCDICCodec, HexCodec } from './codec';
 
 describe('Codecs', () => {
   [
@@ -24,13 +16,9 @@ describe('Codecs', () => {
     { codec: AsciiNumber, input: 123456 },
     { codec: BCDNumberCodec, input: 100 },
   ].map(({ codec, input }: any) => {
-    test(
-      'should be able to encode and decode to get the initial input using ' +
-        codec.name,
-      () => {
-        expect(codec.decode(codec.encode(input))).toBe(input);
-      }
-    );
+    test('should be able to encode and decode to get the initial input using ' + codec.name, () => {
+      expect(codec.decode(codec.encode(input))).toBe(input);
+    });
   });
 
   describe('Packed', () => {
