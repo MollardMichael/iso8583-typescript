@@ -5,6 +5,7 @@ import {
   iterate,
   printBitmap,
   readBitmap,
+  SimpleBitmap,
   writeBitmap,
 } from './bitmap';
 import { Field } from './fields';
@@ -61,6 +62,20 @@ export const printMessage = <FD extends FieldDefinition>(
         `${message.definition.fields[Number(field)].name}: ${value}`
     )
     .join('\n\t')}`;
+};
+
+export const createNewMessage = <FD extends FieldDefinition>(
+  definition: MessageDefinition<FD>,
+  mti: number
+): Message<FD> => {
+  const messageContent = {
+    mti,
+    bitmap: SimpleBitmap,
+    definition,
+    content: {},
+  };
+
+  return { ...messageContent, show: () => printMessage(messageContent) };
 };
 
 export const parse: Parse = (definition, iso) => {
@@ -134,5 +149,6 @@ export const createFieldDefinition = <FD extends FieldDefinition>(
     ...messageDef,
     parse: (iso: Buffer) => parse(messageDef, iso),
     prepare: (message: Message<FD>) => prepare(messageDef, message),
+    createNewMessage: (mti: number) => createNewMessage(messageDef, mti),
   };
 };

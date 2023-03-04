@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { CustomIsoDefinition } from '../example/custom';
-import { parse, prepare, printMessage } from './message';
+import { createNewMessage, parse, prepare, printMessage } from './message';
 
 test('test works', () => {
   expect(true).toEqual(true);
@@ -80,4 +80,15 @@ test('parsing and preparing should also work using object call', () => {
   const message = CustomIsoDefinition.parse(buffer);
   const result = CustomIsoDefinition.prepare(message);
   expect(result).toEqual(buffer);
+});
+
+// TODO Fix printing of the bitmap
+test('we can edit a newly created message', () => {
+  const message = createNewMessage(CustomIsoDefinition, 100);
+  message.content[2] = '534271829301';
+  expect(message.show()).toEqual(`MTI -> 100
+Bitmap ->
+\tType -> Simple
+\tFields Set -> \nFields ->
+\tPAN: 534271829301`);
 });
