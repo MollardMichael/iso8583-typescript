@@ -49,6 +49,18 @@ export const ByteToNumberCodec: Codec<number> = {
   },
 };
 
+export const BCDNumberCodec: Codec<number> = {
+  name: 'ByteToNumberCodec',
+  decode: function (input: Buffer): number {
+    return Number.parseInt(input.toString('hex'));
+  },
+  encode: function (input: number): Buffer {
+    let hex = input.toString();
+    if (hex.length % 2 === 1) hex = '0' + hex;
+    return Buffer.from(hex, 'hex');
+  },
+};
+
 export const AsciiNumber: Codec<number> = {
   name: 'ByteToNumberCodec',
   decode: function (input: Buffer): number {

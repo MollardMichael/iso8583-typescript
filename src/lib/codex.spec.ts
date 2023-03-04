@@ -2,6 +2,7 @@ import { test, describe, expect } from 'vitest';
 import {
   ANCodec,
   AsciiNumber,
+  BCDNumberCodec,
   BinaryCodec,
   ByteToNumberCodec,
   EBCDICCodec,
@@ -21,6 +22,7 @@ describe('Codecs', () => {
     { codec: BinaryCodec, input: 'Here 456é&é(' },
     { codec: AsciiNumber, input: NaN },
     { codec: AsciiNumber, input: 123456 },
+    { codec: BCDNumberCodec, input: 100 },
   ].map(({ codec, input }: any) => {
     test(
       'should be able to encode and decode to get the initial input using ' +
@@ -29,5 +31,12 @@ describe('Codecs', () => {
         expect(codec.decode(codec.encode(input))).toBe(input);
       }
     );
+  });
+
+  describe('Packed', () => {
+    test('should be able to parse MTI', () => {
+      expect(BCDNumberCodec.decode(Buffer.from('\x01\x00'))).toEqual(100);
+      expect(BCDNumberCodec.encode(100)).toEqual(Buffer.from('\x01\x00'));
+    });
   });
 });
