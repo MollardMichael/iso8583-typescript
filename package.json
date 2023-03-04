@@ -8,6 +8,24 @@
   "repository": "https://github.com/MollardMichael/iso8583-typescript",
   "license": "MIT",
   "keywords": [],
+  "exports": {
+    ".": {
+      "types": "./build/main/index.d.ts",
+      "require": "./dist/cjs/index.js",
+      "import": "./build/module/index.js"
+    },
+    "./examples/*": {
+      "types": "./build/main/examples/*.d.ts",
+      "require": "./build/main/examples/*.js",
+      "import": "./build/module/examples/*.mjs"
+    },
+    "./lib": {
+      "types": "./build/main/lib/*.d.ts",
+      "require": "./build/main/lib/*.js",
+      "import": "./build/module/lib/*.mjs"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.build.json",
