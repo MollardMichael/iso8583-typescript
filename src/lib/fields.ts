@@ -1,6 +1,7 @@
 import {
   ANCodec,
   AsciiNumber,
+  BCDNumberCodec,
   BinaryCodec,
   ByteToNumberCodec,
   Codec,
@@ -20,6 +21,41 @@ export type Field<T> = {
 };
 
 export type FieldFactory<T = string> = (options: FieldOption) => Field<T>;
+
+const BasePacked: <T>(
+  codec: Codec<T>,
+  padding?: (x: Buffer, length: number) => Buffer
+) => FieldFactory<T> =
+  (codec, padding = identity) =>
+  (options) => ({
+    parse: (iso) => {
+      let length = options.length;
+      let raw = iso;
+      if (isField(length)) {
+        const result = length.parse(raw);
+        length = result.value;
+        raw = result.rest;
+      }
+
+      length = Math.ceil(length / 2);
+      const data = codec.decode(raw.subarray(0, length));
+      return { value: data, rest: raw.subarray(length) };
+    },
+    prepare(value) {
+      const result = [];
+      const raw = codec.encode(value);
+
+      if (isField(options.length)) {
+        const length = options.length.prepare(raw.length * 2);
+        result.push(length);
+        result.push(raw);
+      } else {
+        result.push(padding(raw, Math.ceil(options.length / 2)));
+      }
+
+      return Buffer.concat(result);
+    },
+  });
 
 const Base: <T>(
   codec: Codec<T>,
@@ -60,6 +96,11 @@ export const PadLeftZero = (value: Buffer, length: number) => {
   return Buffer.concat([Buffer.from(''.padEnd(padLength, '0')), value]);
 };
 
+export const PadLeftNull = (value: Buffer, length: number) => {
+  const padLength = length - value.length;
+  return Buffer.concat([Buffer.from(''.padEnd(padLength, '\x00')), value]);
+};
+
 export const PadRightSpace = (value: Buffer, length: number) => {
   const padLength = length - value.length;
   return Buffer.concat([value, Buffer.from(''.padEnd(padLength, ' '))]);
@@ -75,9 +116,16 @@ export const PadRightNull = (value: Buffer, length: number) => {
  */
 export const HEX: FieldFactory<string> = Base(HexCodec);
 
-export const BN: FieldFactory<number> = Base(ByteToNumberCodec);
+export const BN: FieldFactory<number> = Base(ByteToNumberCodec, PadLeftNull);
 
 export const B: FieldFactory<string> = Base(BinaryCodec, PadRightNull);
+
+export const Packed_HEX: FieldFactory<string> = BasePacked(HexCodec);
+
+export const BCD: FieldFactory<number> = BasePacked(
+  BCDNumberCodec,
+  PadLeftNull
+);
 
 /**
  * Numeric with leading 0s
@@ -133,6 +181,11 @@ export const LLLVAR_B = B({ length: N({ length: 3 }) });
  * 3 bytes Variable Length Binary Data
  */
 export const LLLLVAR_B = B({ length: N({ length: 4 }) });
+
+/**
+ * Variable Length Hex string (Raw Value)
+ */
+export const LLLVAR_HEX = HEX({ length: BN({ length: 2 }) });
 
 function isField(input: number | Field<number>): input is Field<number> {
   return typeof input !== 'number';

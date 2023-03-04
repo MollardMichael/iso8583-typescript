@@ -13,37 +13,37 @@ test('We can parse a complete ISO message', () => {
   );
 
   const parsed = parse(CustomIsoDefinition, buffer);
-  expect(parsed.mti).toBe('0100');
+  expect(parsed.mti).toBe(100);
   expect(parsed.content).toEqual({
     '2': '517003veycQe8909', // cspell:disable-line
     '3': '010000',
-    '4': '000000000100',
-    '6': '000000000100',
+    '4': 100,
+    '6': 100,
     '7': '0223113745',
-    '11': '424989',
-    '18': '3250',
+    '11': 424989,
+    '18': 3250,
     '22': '0101',
     '38': 'aOQcNr',
     '41': 'Lt1jLEjx',
     '42': '1Zq9D1bvAxXR3bz',
     '43': 'BTdhcxXqWs             6pMI6rEtSy     US', // cspell:disable-line
     '48': '030202060200110201120100',
-    '49': '0978',
-    '51': '0978',
+    '49': 978,
+    '51': 978,
     '90': '000000000000000000000000000000000000000000',
     '95': '000000000000000000000000000000000000000000',
   });
 
   expect(printMessage(parsed)).toBe(
-    `MTI -> 0100
+    `MTI -> 100
 Bitmap ->
 \tType -> Extended
 \tFields Set -> 2, 3, 4, 6, 7, 11, 18, 22, 38, 41, 42, 43, 48, 49, 51, 90, 95
 Fields ->
 \tPAN: 517003veycQe8909` + // cspell:disable-line
       `\n\tType: 010000
-\tAmount: 000000000100
-\tOriginal Amount: 000000000100
+\tAmount: 100
+\tOriginal Amount: 100
 \tTime: 0223113745
 \tAudit: 424989
 \tMCC: 3250
@@ -53,8 +53,8 @@ Fields ->
 \tPOS Owner ID: 1Zq9D1bvAxXR3bz
 \tName & Address: BTdhcxXqWs             6pMI6rEtSy     US` + // cspell:disable-line
       `\n\tPayment Options: 030202060200110201120100
-\tCurrency: 0978
-\tOriginal Currency: 0978
+\tCurrency: 978
+\tOriginal Currency: 978
 \tOriginal Transaction Info: 000000000000000000000000000000000000000000
 \tAmount Update: 000000000000000000000000000000000000000000`
   );
