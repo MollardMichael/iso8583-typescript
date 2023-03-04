@@ -31,8 +31,8 @@
 <li>Documented enough that I would be able to write my own parser</li>
 </ul>
 
-<a href="#iso8583" id="iso8583" style="color: inherit; text-decoration: none;">
-  <h2>ISO8583?</h2>
+<a href="#what-is-iso-8583" id="what-is-iso-8583" style="color: inherit; text-decoration: none;">
+  <h2>What is ISO 8583?</h2>
 </a>
 <p><a href="https://en.wikipedia.org/wiki/ISO_8583">Wikipedia</a> describe ISO 8583 as an international standard for financial transaction card originated interchange messaging.</p>
 <p>It was the de facto standard to talk with Card Scheme (MCD, VISA) but is slowly being replaced by <a href="https://en.wikipedia.org/wiki/ISO_20022">ISO 20022</a>.</p>
@@ -68,10 +68,13 @@
   <h2>API</h2>
 </a>
 <p>In order to use the library, you first need to create a MessageDefinition object that describe the fields present in your ISO 8583 messages and will serve as the base of the parser.</p>
-
-<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-  <h3>Usage</h3>
-</a>
+<p>You can learn more about the type and function of the library <a href="https://mollardmichael.github.io/iso8583-typescript/">here</a></p>
+<pre><code class="language-typescript"><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">createFieldDefinition</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&#39;iso8583-typescript&#39;</span><span class="hl-0">;</span><br/><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">N</span><span class="hl-0">, </span><span class="hl-3">LLVAR_N</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&#39;iso8583-typescript/lib/fields&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-2">export</span><span class="hl-0"> </span><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">IsoDefinition</span><span class="hl-0"> = </span><span class="hl-6">createFieldDefinition</span><span class="hl-0">({</span><br/><span class="hl-0">  </span><span class="hl-3">fields:</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-1">&#39;2&#39;</span><span class="hl-3">:</span><span class="hl-0"> { </span><span class="hl-3">name:</span><span class="hl-0"> </span><span class="hl-1">&#39;PAN&#39;</span><span class="hl-0">, </span><span class="hl-3">field:</span><span class="hl-0"> </span><span class="hl-5">LLVAR_N</span><span class="hl-0"> },</span><br/><span class="hl-0">  },</span><br/><span class="hl-0">  </span><span class="hl-3">mtiField:</span><span class="hl-0"> </span><span class="hl-6">N</span><span class="hl-0">({ </span><span class="hl-3">length:</span><span class="hl-0"> </span><span class="hl-7">4</span><span class="hl-0"> }),</span><br/><span class="hl-0">});</span>
+</code></pre>
+<p>Once you have your Iso Definition on hand you can use it to parse and write ISO messages</p>
+<pre><code class="language-typescript"><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">buffer</span><span class="hl-0"> = </span><span class="hl-3">Buffer</span><span class="hl-0">.</span><span class="hl-6">from</span><span class="hl-0">(</span><span class="hl-1">&#39;xxxxx&#39;</span><span class="hl-0">); </span><span class="hl-8">// A buffer to your ISO message</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">message</span><span class="hl-0"> = </span><span class="hl-3">IsoDefinition</span><span class="hl-0">.</span><span class="hl-6">parse</span><span class="hl-0">(</span><span class="hl-3">buffer</span><span class="hl-0">);</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">result</span><span class="hl-0"> = </span><span class="hl-3">IsoDefinition</span><span class="hl-0">.</span><span class="hl-6">prepare</span><span class="hl-0">(</span><span class="hl-3">message</span><span class="hl-0">);</span>
+</code></pre>
+<p>Don&#39;t hesitate to look at the <a href="./src/examples/">examples</a> and the test fils for inspiration</p>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
