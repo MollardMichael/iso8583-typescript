@@ -35,13 +35,13 @@ Here are some use cases in which this library can help you
 ### Using NPM
 
 ```shell
-npm install iso8583-typescript
+npm install @micham/iso8583
 ```
 
 ### Using Yarn
 
 ```shell
-yarn add iso8583-typescript
+yarn add @micham/iso8583
 ```
 
 ## API
@@ -51,8 +51,8 @@ In order to use the library, you first need to create a MessageDefinition object
 You can learn more about the type and function of the library [here](https://mollardmichael.github.io/iso8583-typescript/)
 
 ```typescript
-import { createFieldDefinition } from 'iso8583-typescript';
-import { N, LLVAR_N } from 'iso8583-typescript/lib/fields';
+import { createFieldDefinition } from '@micham/iso8583';
+import { N, LLVAR_N } from '@micham/iso8583/lib/fields';
 
 export const IsoDefinition = createFieldDefinition({
   fields: {

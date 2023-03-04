@@ -1,5 +1,5 @@
 {
-  "name": "iso8583-typescript",
+  "name": "@micham/iso8583",
   "version": "1.0.0",
   "description": "Implementation ISO8583 parser",
   "main": "build/main/index.js",
