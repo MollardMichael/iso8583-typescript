@@ -22,10 +22,7 @@ export type Field<T> = {
 
 export type FieldFactory<T = string> = (options: FieldOption) => Field<T>;
 
-const BasePacked: <T>(
-  codec: Codec<T>,
-  padding?: (x: Buffer, length: number) => Buffer
-) => FieldFactory<T> =
+export const BasePacked: <T>(codec: Codec<T>, padding?: (x: Buffer, length: number) => Buffer) => FieldFactory<T> =
   (codec, padding = identity) =>
   (options) => ({
     parse: (iso) => {
@@ -57,10 +54,7 @@ const BasePacked: <T>(
     },
   });
 
-const Base: <T>(
-  codec: Codec<T>,
-  padding?: (x: Buffer, length: number) => Buffer
-) => FieldFactory<T> =
+export const Base: <T>(codec: Codec<T>, padding?: (x: Buffer, length: number) => Buffer) => FieldFactory<T> =
   (codec, padding = identity) =>
   (options) => ({
     parse: (iso) => {
@@ -122,10 +116,7 @@ export const B: FieldFactory<string> = Base(BinaryCodec, PadRightNull);
 
 export const Packed_HEX: FieldFactory<string> = BasePacked(HexCodec);
 
-export const BCD: FieldFactory<number> = BasePacked(
-  BCDNumberCodec,
-  PadLeftNull
-);
+export const BCD: FieldFactory<number> = BasePacked(BCDNumberCodec, PadLeftNull);
 
 /**
  * Numeric with leading 0s

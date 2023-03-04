@@ -1,6 +1,5 @@
 import { BCD, BN, EBCDIC, HEX, LLLVAR_HEX, LLVAR_EBCDIC, LLVAR_HEX, Packed_HEX } from '../lib/fields';
-
-import { createFieldDefinition } from './../lib/message';
+import { createFieldDefinition } from '../lib/message';
 
 export const CustomIsoDefinition = createFieldDefinition({
   fields: {

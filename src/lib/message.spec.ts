@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { CustomIsoDefinition } from '../example/custom';
+import { CustomIsoDefinition } from '../examples/custom';
 import { createNewMessage, parse, prepare, printMessage } from './message';
 
 test('test works', () => {

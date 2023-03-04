@@ -3,10 +3,7 @@ import { BerlinGroupIsoDefinition } from './berlin';
 
 describe('Berlin ISO Format', () => {
   test('should extract the MTI', () => {
-    const buffer = Buffer.from(
-      '0100\x40\x00\x00\x00\x00\x00\x00\x0012474747474747',
-      'ascii'
-    );
+    const buffer = Buffer.from('0100\x40\x00\x00\x00\x00\x00\x00\x0012474747474747', 'ascii');
 
     const message = BerlinGroupIsoDefinition.parse(buffer);
 
@@ -14,10 +11,7 @@ describe('Berlin ISO Format', () => {
   });
 
   test('should extract the PAN', () => {
-    const buffer = Buffer.from(
-      '0100\x40\x00\x00\x00\x00\x00\x00\x0012474747474747',
-      'ascii'
-    );
+    const buffer = Buffer.from('0100\x40\x00\x00\x00\x00\x00\x00\x0012474747474747', 'ascii');
 
     const message = BerlinGroupIsoDefinition.parse(buffer);
 
@@ -60,9 +54,7 @@ describe('Berlin ISO Format', () => {
     message.content[64] = '\xF0\xF0\xF0\xF0';
 
     expect(BerlinGroupIsoDefinition.prepare(message)).toBeDefined();
-    const parsed = BerlinGroupIsoDefinition.parse(
-      BerlinGroupIsoDefinition.prepare(message)
-    );
+    const parsed = BerlinGroupIsoDefinition.parse(BerlinGroupIsoDefinition.prepare(message));
 
     expect(message.mti).toEqual(parsed.mti);
     expect(message.content).toEqual(parsed.content);

@@ -1,24 +1,22 @@
 import type { FixedArray } from '../types/array';
-import type { Digit7, HexByte } from '../types/byte';
+
+export type Digit9 = Digit8 | 9;
+export type Digit8 = Digit7 | 8;
+export type Digit7 = Digit4 | 5 | 6 | 7;
+export type Digit4 = Digit2 | 3 | 4;
+export type Digit2 = Digit1 | 2;
+export type Digit1 = 0 | 1;
+
+export type HexDigit = Digit9 | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
+
+export type HexByte = `${HexDigit}${HexDigit}`;
 
 export type Bitmap = FixedArray<HexByte, 8> | FixedArray<HexByte, 16>;
 
-export const ExtendedBitmap: Bitmap = Array(16).fill('00') as FixedArray<
-  HexByte,
-  16
->;
-export const SimpleBitmap: Bitmap = Array(8).fill('00') as FixedArray<
-  HexByte,
-  8
->;
+export const ExtendedBitmap: Bitmap = Array(16).fill('00') as FixedArray<HexByte, 16>;
+export const SimpleBitmap: Bitmap = Array(8).fill('00') as FixedArray<HexByte, 8>;
 
-export type ReadBitmap = (buffer: Buffer) => { bitmap: Bitmap; rest: Buffer };
-export type WriteBitmap = (fields: number[]) => Buffer;
-export type IsExtended = (bitmap: Bitmap) => boolean;
-export type PrintBitmap = (bitmap: Bitmap) => string;
-export type IterateBitmap = (bitmap: Bitmap) => Generator<number, void>;
-
-const isExtended: IsExtended = (bitmap) => {
+const isExtended = (bitmap: Bitmap) => {
   return bitmap.length === 16;
 };
 
@@ -34,7 +32,7 @@ function setBit(buffer: Buffer, i: number, bit: number, value: number) {
   }
 }
 
-export const readBitmap: ReadBitmap = (buffer) => {
+export const readBitmap = (buffer: Buffer) => {
   if (isBitOn(buffer.toString('hex', 0, 1) as HexByte, 0)) {
     return {
       bitmap: buffer.toString('hex', 0, 16).match(/..?/g) as Bitmap,
@@ -64,7 +62,7 @@ export const writeBitmap = (fields: number[]) => {
   return bitmap;
 };
 
-export const iterate: IterateBitmap = function* (bitmap) {
+export const iterate = function* (bitmap: Bitmap) {
   const maxField = bitmap.length * 8;
   for (let field = 2; field <= maxField; field++) {
     // Example: Field 11 is the 11 bit in the bit map. It's thus part of the second Byte (11/8 > 1)
@@ -81,8 +79,8 @@ export const iterate: IterateBitmap = function* (bitmap) {
   }
 };
 
-export const printBitmap: PrintBitmap = (bitmap) => {
-  return `Bitmap ->\n\tType -> ${
-    isExtended(bitmap) ? 'Extended' : 'Simple'
-  }\n\tFields Set -> ${Array.from(iterate(bitmap)).join(', ')}`;
+export const printBitmap = (bitmap: Bitmap) => {
+  return `Bitmap ->\n\tType -> ${isExtended(bitmap) ? 'Extended' : 'Simple'}\n\tFields Set -> ${Array.from(
+    iterate(bitmap)
+  ).join(', ')}`;
 };
