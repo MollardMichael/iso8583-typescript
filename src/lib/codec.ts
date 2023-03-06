@@ -1,11 +1,24 @@
 import codepage from 'codepage';
 
+/**
+ * A codec defines a bi-directional mapping between a binary representation (in the form of a Buffer)
+ * and a logical representation (in some other type). The codec is responsible for encoding instances
+ * of the logical type to Buffers, and decoding Buffers to instances of the logical type.
+ *
+ * @template T The logical type of the codec
+ */
 export type Codec<T = string> = {
+  /** The name of the codec */
   name: string;
+  /** Decode a binary representation into an instance of the logical type */
   decode: (input: Buffer) => T;
+  /** Encode an instance of the logical type into a binary representation */
   encode: (input: T) => Buffer;
 };
 
+/**
+ * A codec that can encode and decode hexadecimal strings
+ */
 export const HexCodec: Codec = {
   name: 'HexCodec',
   decode: function (input: Buffer): string {
@@ -16,6 +29,9 @@ export const HexCodec: Codec = {
   },
 };
 
+/**
+ * A codec that can encode and decode ASCII strings with trailing spaces trimmed
+ */
 export const ANCodec: Codec = {
   name: 'ANCodec',
   decode: function (input: Buffer): string {
@@ -26,6 +42,9 @@ export const ANCodec: Codec = {
   },
 };
 
+/**
+ * A codec that can encode and decode binary strings
+ */
 export const BinaryCodec: Codec<string> = {
   name: 'ByteToNumberCodec',
   decode: function (input: Buffer): string {
@@ -37,6 +56,9 @@ export const BinaryCodec: Codec<string> = {
   },
 };
 
+/**
+ * A codec that can encode and decode numbers encoded as hexadecimal strings
+ */
 export const ByteToNumberCodec: Codec<number> = {
   name: 'ByteToNumberCodec',
   decode: function (input: Buffer): number {
@@ -49,6 +71,9 @@ export const ByteToNumberCodec: Codec<number> = {
   },
 };
 
+/**
+ * A codec that can encode and decode numbers encoded as BCD (binary-coded decimal) strings
+ */
 export const BCDNumberCodec: Codec<number> = {
   name: 'ByteToNumberCodec',
   decode: function (input: Buffer): number {
@@ -61,6 +86,9 @@ export const BCDNumberCodec: Codec<number> = {
   },
 };
 
+/**
+ * A codec that can encode and decode numbers encoded as ASCII strings
+ */
 export const AsciiNumber: Codec<number> = {
   name: 'ByteToNumberCodec',
   decode: function (input: Buffer): number {
@@ -71,6 +99,9 @@ export const AsciiNumber: Codec<number> = {
   },
 };
 
+/**
+ * A codec that can encode and decode EBCDIC-encoded strings
+ */
 export const EBCDICCodec: Codec<string> = {
   name: 'EBCDICCodec',
   decode: function (input: Buffer): string {
