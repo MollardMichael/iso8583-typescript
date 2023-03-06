@@ -1,6 +1,6 @@
 {
   "name": "@micham/iso8583",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Implementation ISO8583 parser",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
