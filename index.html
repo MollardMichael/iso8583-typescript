@@ -16,65 +16,102 @@
 <a href="#iso8583-typescript" id="iso8583-typescript" style="color: inherit; text-decoration: none;">
   <h1>iso8583-typescript</h1>
 </a>
+<p>A TypeScript implementation of an ISO 8583 parser.</p>
 <p><img src="https://img.shields.io/github/license/MollardMichael/iso8583-typescript.svg" alt="license">
 <a href="https://codecov.io/gh/MollardMichael/iso8583-typescript"><img src="https://codecov.io/gh/MollardMichael/iso8583-typescript/branch/master/graph/badge.svg?token=TocNp9fvi2" alt="codecov"></a>
 <img src="https://github.com/MollardMichael/iso8583-typescript/actions/workflows/push.yml/badge.svg" alt="Build Status"></p>
-<p>This repository is yet another implementation of an iso8583 parser in typescript</p>
 
-<a href="#why-should-i-use-this-library" id="why-should-i-use-this-library" style="color: inherit; text-decoration: none;">
-  <h2>Why should I use this library?</h2>
+<a href="#introduction" id="introduction" style="color: inherit; text-decoration: none;">
+  <h2>Introduction</h2>
 </a>
-<p>At the time I created this lib, I could not find a javascript implementation of a iso8583 parser that satisfied those criteria:</p>
+<p>ISO 8583 is a messaging standard used by financial institutions to exchange data between systems. It is widely used for electronic payment transactions, such as ATM withdrawals and credit card purchases. The standard defines a message format and communication protocol for exchanging financial transaction data, and is used by thousands of financial institutions worldwide.</p>
+
+<a href="#description" id="description" style="color: inherit; text-decoration: none;">
+  <h2>Description</h2>
+</a>
+<p><code>iso8583-typescript</code> is a TypeScript implementation of an ISO 8583 parser that provides a few codec and examples on how to handle different types of data. The library is fully typed, making it easy to integrate with TypeScript-based applications and libraries.</p>
+
+<a href="#table-of-contents" id="table-of-contents" style="color: inherit; text-decoration: none;">
+  <h2>Table of Contents</h2>
+</a>
 <ul>
-<li>Written in typescript (fully typed) for seamless integration in typescript based applications and libraries</li>
-<li>Provide a few codec and example on how to handle different type of data</li>
-<li>Documented enough that I would be able to write my own parser</li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#contributing">Contributing</a></li>
+<li><a href="#license">License</a></li>
 </ul>
 
-<a href="#what-is-iso-8583" id="what-is-iso-8583" style="color: inherit; text-decoration: none;">
-  <h2>What is ISO 8583?</h2>
+<a href="#requirements" id="requirements" style="color: inherit; text-decoration: none;">
+  <h2>Requirements</h2>
 </a>
-<p><a href="https://en.wikipedia.org/wiki/ISO_8583">Wikipedia</a> describe ISO 8583 as an international standard for financial transaction card originated interchange messaging.</p>
-<p>It was the de facto standard to talk with Card Scheme (MCD, VISA) but is slowly being replaced by <a href="https://en.wikipedia.org/wiki/ISO_20022">ISO 20022</a>.</p>
-<p>While a bit old, the ISO 8583 format is still quite used today (2023). This repository aim to provide an implementation of the standard.</p>
-
-<a href="#use-cases" id="use-cases" style="color: inherit; text-decoration: none;">
-  <h2>Use cases</h2>
-</a>
-<p>Here are some use cases in which this library can help you</p>
+<p>To use this library, you&#39;ll need the following:</p>
 <ul>
-<li>Parse/Write ISO 8583 messages</li>
-<li>Communicate with ISO 8583 during End 2 End Test Pipelines</li>
-<li>Understand how ISO 8583 works before implementing it in your own stack</li>
+<li>Node.js version 16 or later</li>
+<li>npm or yarn package manager</li>
 </ul>
 
-<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
-  <h2>Installation</h2>
+<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
+  <h2>Getting Started</h2>
 </a>
-
-<a href="#using-npm" id="using-npm" style="color: inherit; text-decoration: none;">
-  <h3>Using NPM</h3>
-</a>
+<p>To get started with iso8583-typescript, follow these steps:</p>
+<ol>
+<li>Install the library using npm or yarn:</li>
+</ol>
 <pre><code class="language-shell"><span class="hl-0">npm </span><span class="hl-1">install</span><span class="hl-0"> </span><span class="hl-1">@micham/iso8583</span>
 </code></pre>
-
-<a href="#using-yarn" id="using-yarn" style="color: inherit; text-decoration: none;">
-  <h3>Using Yarn</h3>
-</a>
 <pre><code class="language-shell"><span class="hl-0">yarn </span><span class="hl-1">add</span><span class="hl-0"> </span><span class="hl-1">@micham/iso8583</span>
 </code></pre>
-
-<a href="#api" id="api" style="color: inherit; text-decoration: none;">
-  <h2>API</h2>
-</a>
-<p>In order to use the library, you first need to create a MessageDefinition object that describe the fields present in your ISO 8583 messages and will serve as the base of the parser.</p>
-<p>You can learn more about the type and function of the library <a href="https://mollardmichael.github.io/iso8583-typescript/">here</a></p>
+<ol start="2">
+<li>Create a MessageDefinition object that describes the fields present in your ISO 8583 messages and serves as the base of the parser:</li>
+</ol>
 <pre><code class="language-typescript"><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">createFieldDefinition</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&#39;@micham/iso8583&#39;</span><span class="hl-0">;</span><br/><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">N</span><span class="hl-0">, </span><span class="hl-3">LLVAR_N</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&#39;@micham/iso8583/lib/fields&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-2">export</span><span class="hl-0"> </span><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">IsoDefinition</span><span class="hl-0"> = </span><span class="hl-6">createFieldDefinition</span><span class="hl-0">({</span><br/><span class="hl-0">  </span><span class="hl-3">fields:</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-1">&#39;2&#39;</span><span class="hl-3">:</span><span class="hl-0"> { </span><span class="hl-3">name:</span><span class="hl-0"> </span><span class="hl-1">&#39;PAN&#39;</span><span class="hl-0">, </span><span class="hl-3">field:</span><span class="hl-0"> </span><span class="hl-5">LLVAR_N</span><span class="hl-0"> },</span><br/><span class="hl-0">  },</span><br/><span class="hl-0">  </span><span class="hl-3">mtiField:</span><span class="hl-0"> </span><span class="hl-6">N</span><span class="hl-0">({ </span><span class="hl-3">length:</span><span class="hl-0"> </span><span class="hl-7">4</span><span class="hl-0"> }),</span><br/><span class="hl-0">});</span>
 </code></pre>
-<p>Once you have your Iso Definition on hand you can use it to parse and write ISO messages</p>
-<pre><code class="language-typescript"><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">buffer</span><span class="hl-0"> = </span><span class="hl-3">Buffer</span><span class="hl-0">.</span><span class="hl-6">from</span><span class="hl-0">(</span><span class="hl-1">&#39;xxxxx&#39;</span><span class="hl-0">); </span><span class="hl-8">// A buffer to your ISO message</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">message</span><span class="hl-0"> = </span><span class="hl-3">IsoDefinition</span><span class="hl-0">.</span><span class="hl-6">parse</span><span class="hl-0">(</span><span class="hl-3">buffer</span><span class="hl-0">);</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">result</span><span class="hl-0"> = </span><span class="hl-3">IsoDefinition</span><span class="hl-0">.</span><span class="hl-6">prepare</span><span class="hl-0">(</span><span class="hl-3">message</span><span class="hl-0">);</span>
+<p>The above example represents an ISO message that only consists of one field (Field 2). That is encoded as a LLVAR_N. This is a 2-byte variable-length numeric field. This means that in the ISO message, you will have two bytes that should be parsed as an integer first to understand the length of the field itself as x. The succeeding x bytes are then parsed as a number (padded on the right with zeros).</p>
+<ol start="3">
+<li>Use the MessageDefinition object to parse and write ISO messages:</li>
+</ol>
+<pre><code class="language-typescript"><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">parse</span><span class="hl-0">, </span><span class="hl-3">prepare</span><span class="hl-0">, </span><span class="hl-3">printMessage</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&#39;@micham/iso8583&#39;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">buffer</span><span class="hl-0"> = </span><span class="hl-3">Buffer</span><span class="hl-0">.</span><span class="hl-6">from</span><span class="hl-0">(</span><span class="hl-1">&#39;xxxxx&#39;</span><span class="hl-0">); </span><span class="hl-8">// A buffer to your ISO message</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">message</span><span class="hl-0"> = </span><span class="hl-6">parse</span><span class="hl-0">(</span><span class="hl-3">IsoDefinition</span><span class="hl-0">, </span><span class="hl-3">buffer</span><span class="hl-0">);</span><br/><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-6">log</span><span class="hl-0">(</span><span class="hl-6">printMessage</span><span class="hl-0">(</span><span class="hl-3">message</span><span class="hl-0">));</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">result</span><span class="hl-0"> = </span><span class="hl-6">prepare</span><span class="hl-0">(</span><span class="hl-3">IsoDefinition</span><span class="hl-0">, </span><span class="hl-3">message</span><span class="hl-0">);</span>
 </code></pre>
-<p>Don&#39;t hesitate to look at the <a href="./src/examples/">examples</a> and the test fils for inspiration</p>
+<p>Alternatively, you can use the MessageDefinition object directly to parse and write ISO messages:</p>
+<pre><code class="language-typescript"><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">buffer</span><span class="hl-0"> = </span><span class="hl-3">Buffer</span><span class="hl-0">.</span><span class="hl-6">from</span><span class="hl-0">(</span><span class="hl-1">&#39;xxxxx&#39;</span><span class="hl-0">); </span><span class="hl-8">// A buffer to your ISO message</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">message</span><span class="hl-0"> = </span><span class="hl-3">IsoDefinition</span><span class="hl-0">.</span><span class="hl-6">parse</span><span class="hl-0">(</span><span class="hl-3">buffer</span><span class="hl-0">);</span><br/><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-6">log</span><span class="hl-0">(</span><span class="hl-3">message</span><span class="hl-0">.</span><span class="hl-6">show</span><span class="hl-0">());</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-5">result</span><span class="hl-0"> = </span><span class="hl-3">IsoDefinition</span><span class="hl-0">.</span><span class="hl-6">prepare</span><span class="hl-0">(</span><span class="hl-3">message</span><span class="hl-0">);</span>
+</code></pre>
+<p>For more information, check out the <a href="https://mollardmichael.github.io/iso8583-typescript/">documentation</a>.</p>
+
+<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
+  <h2>Contributing</h2>
+</a>
+<p>Contributions are welcome! If you have an improvement or feature you&#39;d like to see added to this library, please follow these steps:</p>
+<ul>
+<li>Fork this repository and create a new branch.</li>
+<li>Make your changes and write tests to ensure they work as expected.</li>
+<li>Ensure all tests pass by running npm test.</li>
+<li>Update the README.md with any new features or changes to the library&#39;s behavior.</li>
+<li>Submit a pull request with your changes.</li>
+</ul>
+
+<a href="#development" id="development" style="color: inherit; text-decoration: none;">
+  <h3>Development</h3>
+</a>
+<p>To get started with development, clone the repository and install the dependencies with npm install.</p>
+<pre><code class="language-bash"><span class="hl-0">git </span><span class="hl-1">clone</span><span class="hl-0"> </span><span class="hl-1">https://github.com/MollardMichael/iso8583-typescript.git</span><br/><span class="hl-6">cd</span><span class="hl-0"> </span><span class="hl-1">iso8583-typescript</span><br/><span class="hl-0">npm </span><span class="hl-1">install</span>
+</code></pre>
+<p>To build the project, run <code>npm run build</code>. This will build the project to the dist directory.</p>
+<p>To run the tests, run <code>npm test</code>. This will run the test suite and output the results to the console.</p>
+
+<a href="#reporting-bugs" id="reporting-bugs" style="color: inherit; text-decoration: none;">
+  <h3>Reporting Bugs</h3>
+</a>
+<p>If you find a bug or issue with the library, please open an issue on the <a href="https://github.com/MollardMichael/iso8583-typescript/issues">GitHub repository</a> with a clear and detailed description of the problem. Please include any relevant code or logs that can help reproduce the issue.</p>
+
+<a href="#pull-requests" id="pull-requests" style="color: inherit; text-decoration: none;">
+  <h3>Pull Requests</h3>
+</a>
+<p>When submitting a pull request, please ensure that your code adheres to the project&#39;s coding standards and that all tests pass. If your pull request adds new functionality, please also include tests for that functionality.</p>
+
+<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+  <h2>License</h2>
+</a>
+<p>This project is licensed under the MIT License - see the <a href="https://github.com/MollardMichael/iso8583-typescript/blob/master/LICENSE">LICENSE</a> file for details.</p>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
