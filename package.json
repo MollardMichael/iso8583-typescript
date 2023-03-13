@@ -73,7 +73,7 @@
     "@vitest/coverage-c8": "^0.29.1",
     "@vitest/ui": "^0.29.1",
     "codecov": "3.8.3",
-    "cspell": "6.28.0",
+    "cspell": "6.29.0",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.35.0",
     "eslint-config-prettier": "8.6.0",
