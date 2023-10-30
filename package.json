@@ -67,7 +67,7 @@
     "codepage": "1.15.0"
   },
   "devDependencies": {
-    "@types/node": "18.15.0",
+    "@types/node": "20.8.9",
     "@typescript-eslint/eslint-plugin": "5.54.0",
     "@typescript-eslint/parser": "5.59.9",
     "@vitest/coverage-c8": "^0.29.1",
