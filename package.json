@@ -60,7 +60,7 @@
     "prepare-release": "run-s reset-hard test doc:html version doc:publish"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
     "codepage": "1.15.0"
