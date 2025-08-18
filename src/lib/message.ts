@@ -71,7 +71,7 @@ export const printMessage = <FD extends FieldDefinition>(message: Omit<Message<F
  */
 export const createNewMessage = <FD extends FieldDefinition>(
   definition: MessageDefinition<FD>,
-  mti: number
+  mti: number,
 ): Message<FD> => {
   const messageContent = {
     mti,
@@ -135,14 +135,14 @@ export const parse = <FD extends FieldDefinition>(definition: MessageDefinition<
  */
 export const prepare = <FD extends FieldDefinition>(
   definition: MessageDefinition<FD>,
-  message: Message<FD>
+  message: Message<FD>,
 ): Buffer => {
   const result = [];
   result.push(definition.mtiField.prepare(message.mti));
   result.push(writeBitmap(Object.keys(message.content).map(Number)));
   const orderedFields = Object.entries(message.content).sort(([a], [b]) => Number(a) - Number(b));
   const fieldBuffers = orderedFields.map(
-    ([field, value]) => definition.fields[field].field.prepare(value as never) // TODO FIX
+    ([field, value]) => definition.fields[field].field.prepare(value as never), // TODO FIX
   );
   return Buffer.concat(result.concat(fieldBuffers));
 };
@@ -178,7 +178,7 @@ const extractMTI = <FD extends FieldDefinition>(definition: MessageDefinition<FD
 const extractFields = <FD extends FieldDefinition>(
   messageDefinition: MessageDefinition<FD>,
   bitmap: Bitmap,
-  iso: Buffer
+  iso: Buffer,
 ) => {
   let rest = iso;
   const result: { [x: string]: string | number } = {};

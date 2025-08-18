@@ -81,6 +81,6 @@ export const iterate = function* (bitmap: Bitmap) {
 
 export const printBitmap = (bitmap: Bitmap) => {
   return `Bitmap ->\n\tType -> ${isExtended(bitmap) ? 'Extended' : 'Simple'}\n\tFields Set -> ${Array.from(
-    iterate(bitmap)
+    iterate(bitmap),
   ).join(', ')}`;
 };
